@@ -1,0 +1,48 @@
+(def gen-val (lo hi)
+     (scoped
+      (var range (Math.abs (- hi lo)))
+      (+ lo (* (Math.random) range))))
+
+(def pick-random-ranked (ranked-item-list)
+     ;; ranked-item-list contains objects
+     ;; with a numerical "rank" attribute.
+     ;; this will pick a random item in a probability
+     ;; by its rank, relative to the sum of all ranks
+     (var total 0)
+     (each item ranked-item-list
+           (assign total (+ total item.rank)))
+     
+     (var choice (* (Math.random) total))
+     (assign total 0)
+     (var j 0
+          breakout false)
+     (while (and (not breakout)
+                 (< j ranked-item-list.length))
+            (assign total (+ total (get (get ranked-item-list j) "rank")))
+            (if (< choice total)
+                (assign breakout true)
+                (assign j (+ 1 j))))
+     j)
+
+(def make-iid-sampler (item-list weight-list)
+     ;; return an IID sampler given a distribution
+     ;; that you can repeatedly call
+     (var sum-weight (weight-list.reduce (#(a b) (+ a b)) 0))
+     (def sampler ()
+          (var thresh (* (Math.random) sum-weight)
+               cur-sum 0
+               found? false
+               result null
+               i 0)
+          (while (and (not found?)
+                      (< cur-sum sum-weight)
+                      (< i item-list.length))
+                 (var cur-item (get item-list i))
+                 (incr-by cur-sum (get weight-list i))
+                 (when (<= thresh cur-sum)
+                       (assign result cur-item)
+                       (assign found? true))
+                 (incr i))
+          result)
+     sampler)
+

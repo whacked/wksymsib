@@ -1,0 +1,36 @@
+(def frequencies (arr keyfunc)
+     (var keyfunc (or keyfunc
+                      identity)
+          counter {})
+     (each (item i) arr
+           (var id (keyfunc item))
+           (if (not (get counter id))
+               (set counter id 0))
+           (|> counter
+               (get id)
+               (incr (get counter id))))
+     counter)
+
+(def array-diff (coll)
+     (var rtn []
+          i1 1)
+     (while (< i1 coll.length)
+            (rtn.push (- (get coll i1)
+                         (get coll (- i1 1))))
+            (incr i1))
+     rtn)
+
+(def array-cumsum (coll)
+     (var rtn []
+          total 0
+          i 0)
+     (while (< i coll.length)
+            (incr-by total (get coll i))
+            (rtn.push total)
+            (incr i))
+     rtn)
+
+(def array-average (coll)
+     (var sum (|> coll
+                  (.reduce (#(a b) (+ a b)))))
+     (/ sum coll.length))

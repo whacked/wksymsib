@@ -1,0 +1,8 @@
+(def deg2rad (deg)
+     (* (/ deg 180) Math.PI))
+
+(def dsin (deg)
+     (Math.sin (deg2rad deg)))
+
+(def dcos (deg)
+     (Math.cos (deg2rad deg)))
