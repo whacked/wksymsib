@@ -1,0 +1,5 @@
+(def log-thru (x extra)
+     (when extra
+           (console.warn extra))
+     (console.log x)
+     x)
